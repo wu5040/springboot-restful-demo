@@ -2,6 +2,7 @@ package com.example.demo.Controller;
 
 import com.example.demo.Mappers.UserMapper;
 import com.example.demo.domain.User;
+import com.example.demo.pwdEncoder.pwdEncoder;
 import com.example.springboot.demo.singleton.SingletonMybatis;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -59,17 +60,37 @@ public class UserController {
 
     //RequestBody这个注解可以接收json数据
     //注册新用户
-    @RequestMapping(method = RequestMethod.POST,value = "/user")
+    @RequestMapping(method = RequestMethod.POST,value = "/register")
     public boolean setUser(String sno,String password){
         SqlSession sqlSession = sqlSessionFactory.openSession();
         try {
+            String pwdEncoded= pwdEncoder.getSaltMD5(password);
             UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
-            userMapper.insert(sno,password);
+            userMapper.insert(sno,pwdEncoded);
             sqlSession.commit();
+            return true;
+        }catch (Exception e){
+            return false;
         }finally {
             sqlSession.close();
         }
-        return true;
+    }
+
+    //登录
+    @RequestMapping(method =RequestMethod.POST,value = "/login")
+    public boolean login(String sno,String password){
+        SqlSession sqlSession=sqlSessionFactory.openSession();
+        try{
+            UserMapper userMapper=sqlSession.getMapper(UserMapper.class);
+            User user=userMapper.getBySno(sno);
+            String pwd=user.getPassword();
+            boolean isSuccess=pwdEncoder.getSaltverifyMD5(password,pwd);
+            return  isSuccess;
+        } catch (Exception e){
+            return false;
+        } finally {
+            sqlSession.close();
+        }
     }
 
     //修改信息

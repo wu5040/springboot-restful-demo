@@ -31,6 +31,10 @@ public class User {
         return sno;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
     public void setName(String name) {
         this.name = name;
     }

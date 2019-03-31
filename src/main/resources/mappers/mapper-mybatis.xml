@@ -11,7 +11,7 @@
     </select>
 
     <insert id="insert" parameterType="string">
-        insert into user(sno,password) values(#{name},#{password})
+        insert into user(sno,password,name) values(#{sno},#{password},null )
     </insert>
 
     <insert id="insert1" parameterType="string">
