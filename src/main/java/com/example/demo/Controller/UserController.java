@@ -3,6 +3,7 @@ package com.example.demo.Controller;
 import com.example.demo.Mappers.UserMapper;
 import com.example.demo.domain.User;
 import com.example.demo.pwdEncoder.pwdEncoder;
+import com.example.demo.Status.Result;
 import com.example.springboot.demo.singleton.SingletonMybatis;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -43,20 +44,6 @@ public class UserController {
 
         return listUsers;
     }
-    //这里用的是路径变量，就是{}括起来的，会当做变量读进来
-//    @RequestMapping(method = RequestMethod.GET,value = "/users/{userId}")
-//    public User getUser(@PathVariable int userId){
-//        User user;
-//        SqlSession sqlSession = sqlSessionFactory.openSession();
-//        try {
-//            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
-//            user = userMapper.getById(userId);
-//            sqlSession.commit();
-//        }finally {
-//            sqlSession.close();
-//        }
-//        return user;
-//    }
 
     //RequestBody这个注解可以接收json数据
     //注册新用户
@@ -78,14 +65,19 @@ public class UserController {
 
     //登录
     @RequestMapping(method =RequestMethod.POST,value = "/login")
-    public boolean login(String sno,String password){
+    public Object login(String sno,String password){
         SqlSession sqlSession=sqlSessionFactory.openSession();
         try{
             UserMapper userMapper=sqlSession.getMapper(UserMapper.class);
             User user=userMapper.getBySno(sno);
-            String pwd=user.getPassword();
-            boolean isSuccess=pwdEncoder.getSaltverifyMD5(password,pwd);
-            return  isSuccess;
+            if(user==null){
+                return new Result("用户名不存在",Result.ErrorCode.USER_NOT_FOUND.getCode());
+            }
+            else {
+                String pwd = user.getPassword();
+                boolean isSuccess = pwdEncoder.getSaltverifyMD5(password, pwd);
+                return isSuccess;
+            }
         } catch (Exception e){
             return false;
         } finally {
