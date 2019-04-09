@@ -1,42 +1,62 @@
 package com.example.demo.Status;
 
+import com.alibaba.fastjson.JSONObject;
+
 public class Result {
-
-    //错误内容
-    private String error;
-
-    //错误码
+    private String message;
     private int code;
+    private JSONObject userInfo;
 
-
-    public Result(String error, int code)
-    {
-        this.error = error;
+    public Result(String message, int code) {
+        this.message = message;
         this.code = code;
+        this.userInfo = null;
     }
 
-    public String getError()
-    {
-        return error;
+    public Result(String message, int code, JSONObject userInfo) {
+        this.message = message;
+        this.code = code;
+        this.userInfo = userInfo;
     }
 
-    public void setError(String error)
-    {
-        this.error = error;
+    public String getMessage() {
+        return message;
     }
 
-    public int getCode()
-    {
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public int getCode() {
         return code;
     }
 
-    public void setCode(int code)
-    {
+    public void setCode(int code) {
         this.code = code;
     }
 
+    public JSONObject getUserInfo(){
+        return userInfo;
+    }
 
-    public enum ErrorCode{
+    public enum StatusCode {
+        /**
+         * 成功
+         */
+        SUCCESS(200),
+
+        /**
+         * 失败
+         */
+        FAIL(400),
+
+
+        /**
+         * 用户没有权限
+         */
+
+        Unauthorized(401),
+
         /**
          * 用户不存在
          */
@@ -56,13 +76,11 @@ public class Result {
 
         private int code;
 
-        public int getCode()
-        {
+        public int getCode() {
             return code;
         }
 
-        ErrorCode(int code)
-        {
+        StatusCode(int code) {
             this.code = code;
         }
     }
