@@ -1,13 +1,12 @@
 package com.example.demo.Controller;
 
+import com.example.demo.Config.JwtUtil;
+import com.example.demo.Config.pwdEncoder;
 import com.example.demo.Mappers.UserMapper;
 import com.example.demo.Status.Exception.NotFoundException;
 import com.example.demo.Status.Exception.UnauthorizedException;
-import com.example.demo.Util.CheckToken;
-import com.example.demo.Util.LoginToken;
+import com.example.demo.annotation.*;
 import com.example.demo.domain.User;
-import com.example.demo.Util.JwtUtil;
-import com.example.demo.Util.pwdEncoder;
 import com.example.demo.Status.Result;
 import com.example.springboot.demo.singleton.SingletonMybatis;
 
@@ -96,11 +95,11 @@ public class UserController {
             boolean isSuccess = pwdEncoder.getSaltverifyMD5(password, pwd);
             if (isSuccess) {
                 String token = JwtUtil.createJWT(user);
-                JSONObject userInfo=new JSONObject();
-                userInfo.put("sno",user.getSno());
-                userInfo.put("name",user.getName());
-                userInfo.put("token",token);
-                return new Result("登录成功", Result.StatusCode.SUCCESS.getCode(),userInfo);
+                JSONObject userInfo = new JSONObject();
+                userInfo.put("sno", user.getSno());
+                userInfo.put("name", user.getName());
+                userInfo.put("token", token);
+                return new Result("登录成功", Result.StatusCode.SUCCESS.getCode(), userInfo);
             } else {
                 throw new UnauthorizedException("密码错误", Result.StatusCode.Unauthorized.getCode());
             }
@@ -109,9 +108,9 @@ public class UserController {
 
 
     @CheckToken
-    @RequestMapping(method = RequestMethod.GET,value = "/testToken")
-    public String testToken(){
-        return "通过token验证";
+    @RequestMapping(method = RequestMethod.POST, value = "/testToken")
+    public Object testToken(@CurrentUser User user) {
+        return user;
     }
     //修改信息
 //    @RequestMapping(method = RequestMethod.PUT,value = "/user/{userid}/{name}")

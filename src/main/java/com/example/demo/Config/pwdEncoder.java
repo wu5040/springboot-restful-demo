@@ -1,4 +1,4 @@
-package com.example.demo.Util;
+package com.example.demo.Config;
 import java.security.MessageDigest;
 import java.util.Random;
 
@@ -95,9 +95,9 @@ public class pwdEncoder {
 //            String plaintext = "123456";
 //
 //            // 获取加盐后的MD5值
-//            String ciphertext = Util.getSaltMD5(plaintext);
+//            String ciphertext = annotation.getSaltMD5(plaintext);
 //            System.out.println("加盐后MD5：" + ciphertext);
-//            System.out.println("是否是同一字符串:" + Util.getSaltverifyMD5(plaintext, ciphertext));
+//            System.out.println("是否是同一字符串:" + annotation.getSaltverifyMD5(plaintext, ciphertext));
 //        }
 
 }

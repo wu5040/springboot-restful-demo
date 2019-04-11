@@ -1,4 +1,4 @@
-package com.example.demo.interceptor;
+package com.example.demo.Config;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.JWTDecodeException;
@@ -6,9 +6,8 @@ import com.example.demo.Mappers.UserMapper;
 import com.example.demo.Status.Exception.NotFoundException;
 import com.example.demo.Status.Exception.UnauthorizedException;
 import com.example.demo.Status.Result;
-import com.example.demo.Util.CheckToken;
-import com.example.demo.Util.JwtUtil;
-import com.example.demo.Util.LoginToken;
+import com.example.demo.annotation.CheckToken;
+import com.example.demo.annotation.LoginToken;
 import com.example.demo.domain.User;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -27,6 +26,8 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     @Autowired
     private static SqlSessionFactory sqlSessionFactory;
 
+    private static final String USER="user";
+
     static {
         sqlSessionFactory = com.example.springboot.demo.singleton.SingletonMybatis.getSqlSessionFactory();
     }
@@ -34,7 +35,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,Object object) throws Exception {
 
-        String token =httpServletRequest.getHeader("token");
+        String token =httpServletRequest.getHeader("token");//从请求头获取token
         if(!(object instanceof HandlerMethod)){
             return true;
         }
@@ -81,6 +82,9 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 if (!verify) {
                     throw new UnauthorizedException("非法访问！", Result.StatusCode.Unauthorized.getCode());
                 }
+
+                //将user 添加到 request中，以便后续操作获取user
+                httpServletRequest.setAttribute(USER,user);
                 return true;
             }
         }
