@@ -7,11 +7,11 @@ import java.sql.Date;
 
 //用户信息类
 public class User {
-    private String userId;
-    private String password;
-    private String name;
-    private String gender;
-    private String role;
+    private String userId;      //用户Id
+    private String password;    //用户密码
+    private String name;        //用户姓名
+    private String gender;      //性别
+    private String role;        //角色
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date birthday;

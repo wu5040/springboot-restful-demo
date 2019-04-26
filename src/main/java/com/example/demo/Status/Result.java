@@ -5,18 +5,29 @@ import com.alibaba.fastjson.JSONObject;
 public class Result {
     private String message;
     private int code;
-    private JSONObject userInfo;
+    private JSONObject jsonObject;
+    private Object object;
 
     public Result(String message, int code) {
         this.message = message;
         this.code = code;
-        this.userInfo = null;
+        this.jsonObject = null;
+        this.object=null;
     }
 
-    public Result(String message, int code, JSONObject userInfo) {
+    public Result(String message, int code, JSONObject jsonObject,Object object) {
         this.message = message;
         this.code = code;
-        this.userInfo = userInfo;
+        this.jsonObject = jsonObject;
+        this.object=object;
+    }
+
+    public Object getObject() {
+        return object;
+    }
+
+    public void setObject(Object object) {
+        this.object = object;
     }
 
     public String getMessage() {
@@ -35,8 +46,8 @@ public class Result {
         this.code = code;
     }
 
-    public JSONObject getUserInfo(){
-        return userInfo;
+    public JSONObject getJsonObject(){
+        return jsonObject;
     }
 
     public enum StatusCode {
@@ -63,9 +74,20 @@ public class Result {
         USER_NOT_FOUND(40401),
 
         /**
+         * 开课表中课程不存在
+         */
+        OPEN_NOT_FOUND(40402),
+
+
+        /**
          * 用户已存在
          */
         USER_ALREADY_EXIST(40001),
+
+        /**
+         * 所选课程已存在
+         */
+        ELECTIVE_ALREADY_EXIST(40002),
 
 
         /**

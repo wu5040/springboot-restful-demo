@@ -1,26 +1,22 @@
 package com.example.demo.domain;
 
 
-import java.sql.Date;
-
 public class Student extends User {
 
-    private String jg;
-    private String sjhm;
-    private String yxh;
-
-    public Student(String sno,String password){
-        super(sno,password,"student");
-    }
+    private String sno;
+    private String jg;      //籍贯
+    private String sjhm;    //手机号码
+    private String yxh;     //院系号
 
 
-    public Student(String sno,String password,String xm,String xb,Date csrq,String jg,String sjhm,String yxh){
-        super(sno,password,xm,xb,csrq,"student");
+    public Student(String sno,String jg,String sjhm,String yxh){
 
+        this.sno=sno;
         this.jg=jg;
         this.sjhm=sjhm;
         this.yxh=yxh;
     }
+
 
 
     public String getJg(){

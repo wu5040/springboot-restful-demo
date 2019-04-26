@@ -1,10 +1,11 @@
 package com.example.demo.domain;
 
+//开课表
 public class Open {
-    private String xq;
-    private String kh;
-    private String gh;
-    private String sksj;
+    private String xq;      //学期
+    private String kh;      //课号
+    private String gh;      //教师工号
+    private String sksj;    //上课时间
 
     public Open(String xq, String kh, String gh, String sksj) {
         this.xq = xq;

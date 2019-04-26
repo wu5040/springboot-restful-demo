@@ -1,10 +1,11 @@
 package com.example.demo.domain;
 
+//院系表
 public class Department {
-    private String yxh;
-    private String mc;
-    private String dz;
-    private String lxdh;
+    private String yxh;     //院系号
+    private String mc;      //名称
+    private String dz;      //地址
+    private String lxdh;    //联系电话
 
     public Department(){
 

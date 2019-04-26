@@ -1,12 +1,13 @@
 package com.example.demo.domain;
 
+//课程表
 public class Course {
-    private String kh;
-    private String km;
-    private int xf;
-    private int xs;
-    private double cjRatio;
-    private String yxh;
+    private String kh;      //课号
+    private String km;      //课名
+    private int xf;         //学分
+    private int xs;         //学时
+    private double cjRatio; //平时成绩占比
+    private String yxh;     //院系号
 
 
     public Course(String kh, String km, int xf, int xs, double cjRatio,String yxh) {

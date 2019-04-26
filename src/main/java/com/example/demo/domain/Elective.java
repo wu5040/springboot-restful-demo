@@ -1,13 +1,25 @@
 package com.example.demo.domain;
 
+//选课表-成绩表
 public class Elective {
-    private String xh;
-    private String xq;
-    private String kh;
-    private String gh;
-    private double pscj;
-    private double kscj;
-    private double zpcj;
+    private String xh;      //学号
+    private String xq;      //学期
+    private String kh;      //课程号
+    private String gh;      //教师工号
+    private double pscj;    //平时成绩
+    private double kscj;    //考试成绩
+    private double zpcj;    //总评成绩
+
+    public Elective(){
+
+    }
+
+    public Elective(String xh, String xq, String kh, String gh){
+        this.xh = xh;
+        this.xq = xq;
+        this.kh = kh;
+        this.gh = gh;
+    }
 
     public Elective(String xh, String xq, String kh, String gh, double pscj, double kscj, double zpcj) {
         this.xh = xh;
