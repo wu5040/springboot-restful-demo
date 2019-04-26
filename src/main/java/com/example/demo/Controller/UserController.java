@@ -60,19 +60,19 @@ public class UserController {
     //RequestBody这个注解可以接收json数据
     //注册新用户
     @RequestMapping(method = RequestMethod.POST, value = "/register")
-    public Object setUser(String sno, String password) {
+    public Object setUser(String userId, String password) {
         SqlSession sqlSession = sqlSessionFactory.openSession();
 
         UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
 
-        User user = userMapper.getBySno(sno);
+        User user = userMapper.getByUserId(userId);
 
         if (user != null) {
             sqlSession.close();
             return new Result("用户名已存在", Result.StatusCode.FAIL.getCode());
         } else {
             String pwdEncoded = pwdEncoder.getSaltMD5(password);
-            userMapper.insert(sno, pwdEncoded);
+            userMapper.insert(userId, pwdEncoded);
             sqlSession.commit();
             sqlSession.close();
             return new Result("注册成功", Result.StatusCode.SUCCESS.getCode());
@@ -82,11 +82,11 @@ public class UserController {
     //登录
     @LoginToken
     @RequestMapping(method = RequestMethod.POST, value = "/login")
-    public Object login(String sno, String password) throws NotFoundException, UnauthorizedException {
+    public Object login(String userId, String password) throws NotFoundException, UnauthorizedException {
 
         SqlSession sqlSession = sqlSessionFactory.openSession();
         UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
-        User user = userMapper.getBySno(sno);
+        User user = userMapper.getByUserId(userId);
         sqlSession.close();
         if (user == null) {
             throw new NotFoundException("用户名不存在", Result.StatusCode.USER_NOT_FOUND.getCode());
@@ -96,7 +96,7 @@ public class UserController {
             if (isSuccess) {
                 String token = JwtUtil.createJWT(user);
                 JSONObject userInfo = new JSONObject();
-                userInfo.put("sno", user.getSno());
+                userInfo.put("userId", user.getUserId());
                 userInfo.put("name", user.getName());
                 userInfo.put("token", token);
                 return new Result("登录成功", Result.StatusCode.SUCCESS.getCode(), userInfo);

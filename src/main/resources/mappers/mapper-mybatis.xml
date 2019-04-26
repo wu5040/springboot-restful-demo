@@ -6,25 +6,29 @@
 
     <!--id对应接口中的方法，名字要一样，parameterType是方法的参数类型，
     resultType是查询返回的类型，需要注意的是，这里的SQL语句后面不能加分号，变量不能加引号-->
-    <select id="getBySno" parameterType="string" resultType="User">
-        select * from user where sno = #{sno}
+    <select id="getByUserId" parameterType="string" resultType="User">
+        select * from user where userId = #{userId}
     </select>
 
     <insert id="insert" parameterType="string">
-        insert into user(sno,password,name) values(#{sno},#{password},null )
+        insert into user(userId,password,name) values(#{userId},#{password},null )
     </insert>
 
     <insert id="insert1" parameterType="string">
-        insert into user(sno,password,name) values(#{name},#{password},#{name})
+        insert into user(userId,password,name) values(#{name},#{password},#{name})
     </insert>
 
     <select id="getUsers" resultType="User">
-        select * from user order by #{sno}
+        select * from user order by #{userId}
     </select>
 
     <update id="updateUser" parameterType="User">
-        update user set name=#{name} where sno = #{sno}
+        update user set name=#{name} where userId = #{userId}
     </update>
 
+</mapper>
+
+
+<mapper namespace="com.example.demo.Mappers.StudentMapper">
 
 </mapper>

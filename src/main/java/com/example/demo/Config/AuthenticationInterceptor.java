@@ -59,10 +59,10 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 if (token == null) {
                     throw new UnauthorizedException("无token，请重新登录", Result.StatusCode.Unauthorized.getCode());
                 }
-                // 获取 token 中的 user Sno
-                String userSno;
+                // 获取 token 中的 user UserId
+                String userId;
                 try {
-                    userSno = JWT.decode(token).getClaim("sno").asString();
+                    userId = JWT.decode(token).getClaim("userId").asString();
                 } catch (JWTDecodeException j) {
                     throw new UnauthorizedException("访问异常！", Result.StatusCode.Unauthorized.getCode());
                 }
@@ -71,7 +71,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
                 UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
 
-                User user = userMapper.getBySno(userSno);
+                User user = userMapper.getByUserId(userId);
 
                 sqlSession.close();
 

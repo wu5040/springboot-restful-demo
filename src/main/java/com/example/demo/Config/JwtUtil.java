@@ -30,14 +30,14 @@ public class JwtUtil {
 
         //创建payload的私有声明
         Map<String,Object> claims = new HashMap<String, Object>();
-        claims.put("sno",user.getSno());
+        claims.put("userId",user.getUserId());
         claims.put("password",user.getPassword());
 
         //生成签名的时候使用的秘钥secret,这个方法本地封装了的，一般可以从本地配置文件中读取，切记这个秘钥不能外露哦。它就是你服务端的私钥，在任何场景都不应该流露出去。一旦客户端得知这个secret, 那就意味着客户端是可以自我签发jwt了。
         String key = user.getPassword();
 
         //生成签发人
-        String subject = user.getSno();
+        String subject = user.getUserId();
 
         JwtBuilder builder = Jwts.builder()
                 .setClaims(claims)
