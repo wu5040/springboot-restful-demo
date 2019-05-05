@@ -8,7 +8,7 @@
     resultType是查询返回的类型，需要注意的是，这里的SQL语句后面不能加分号，变量不能加引号-->
 
     <select id="getByGh" parameterType="string" resultType="java.util.Map">
-        select xq,Open.kh,km,sksj from Open,Course where Open.kh=Course.kh and gh=#{gh}
+        select xq,Open.kh,km,sksj from Open,Course_ where Open.kh=Course_.kh and gh=#{gh}
     </select>
 
     <select id="getByKhGhXq" parameterType="string" resultType="Open">

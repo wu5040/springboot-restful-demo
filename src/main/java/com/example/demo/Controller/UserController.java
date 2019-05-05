@@ -111,6 +111,7 @@ public class UserController {
                 JSONObject userInfo = new JSONObject();
                 userInfo.put("userId", user.getUserId());
                 userInfo.put("name", user.getName());
+                userInfo.put("role",user.getRole());
                 userInfo.put("token", token);
 
                 return new Result("登录成功", Result.StatusCode.SUCCESS.getCode(), userInfo,null);

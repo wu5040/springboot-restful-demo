@@ -26,14 +26,12 @@ import java.util.Map;
 @RequestMapping("/student")
 public class StudentController {
 
+
     private static SqlSessionFactory sqlSessionFactory;
 
     static {
         sqlSessionFactory = com.example.springboot.demo.singleton.SingletonMybatis.getSqlSessionFactory();
     }
-
-
-
 
 
     @CheckToken
@@ -60,13 +58,11 @@ public class StudentController {
 
         SqlSession sqlSession = sqlSessionFactory.openSession();
         ElectiveMapper electiveMapper=sqlSession.getMapper(ElectiveMapper.class);
-
+        sqlSession.close();
         List<Map> electives = electiveMapper.getByXh(user.getUserId());
 
         return new Result("查询已选课程成功",Result.StatusCode.SUCCESS.getCode(),null,electives);
     }
-
-
 
 
     @CheckToken
@@ -78,6 +74,7 @@ public class StudentController {
             写入Elective选课表
             检查所选课程是否存在于Open开课表中
             检查是否已选择该课程
+
          */
 
         if(!"student".equals(user.getRole())){
@@ -110,7 +107,7 @@ public class StudentController {
 
 
     @CheckToken
-    @RequestMapping(method = RequestMethod.DELETE,value = "elective")
+    @RequestMapping(method = RequestMethod.DELETE,value = "/elective")
     public Object delElective(@CurrentUser User user,String kh,String gh,String xq) throws NotFoundException,UnauthorizedException{
         /**
          * 学生删除已选课程api
@@ -138,6 +135,23 @@ public class StudentController {
 
     }
 
+    @CheckToken
+    @RequestMapping(method = RequestMethod.GET,value = "/elective/grades")
+    public Object getGrades(@CurrentUser User user) throws UnauthorizedException{
+        /**
+         * 学生查询课程成绩api
+         */
+        if(!"student".equals(user.getRole())){
+            throw new UnauthorizedException("role权限错误",Result.StatusCode.Unauthorized.getCode());
+        }
 
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        ElectiveMapper electiveMapper=sqlSession.getMapper(ElectiveMapper.class);
+
+        List<Map> grades = electiveMapper.getGrades(user.getUserId());
+
+        return new Result("查询成绩成功。", Result.StatusCode.SUCCESS.getCode(),null,grades);
+
+    }
 
 }
