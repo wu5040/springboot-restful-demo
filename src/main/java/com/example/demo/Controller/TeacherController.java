@@ -12,15 +12,15 @@ import com.example.demo.domain.Course;
 import com.example.demo.domain.Open;
 import com.example.demo.domain.Student;
 import com.example.demo.domain.User;
-import jdk.nashorn.internal.runtime.regexp.joni.constants.OPCode;
+//import jdk.nashorn.internal.runtime.regexp.joni.constants.OPCode;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.constraints.Null;
+//import javax.validation.constraints.Null;
 import java.util.List;
 import java.util.Map;
 
