@@ -74,10 +74,13 @@ public class Result {
         USER_NOT_FOUND(40401),
 
         /**
-         * 开课表中课程不存在
+         * 课程不存在
          */
-        OPEN_NOT_FOUND(40402),
+        COURSE_NOT_FOUND(40402),
 
+        /**
+         *
+         */
 
         /**
          * 用户已存在
@@ -85,9 +88,9 @@ public class Result {
         USER_ALREADY_EXIST(40001),
 
         /**
-         * 所选课程已存在
+         * 课程已存在
          */
-        ELECTIVE_ALREADY_EXIST(40002),
+        COURSE_ALREADY_EXIST(40002),
 
 
         /**

@@ -41,5 +41,6 @@
         <mapper resource="mappers/mapper-Teacher.xml"/>
         <mapper resource="mappers/mapper-Elective.xml"/>
         <mapper resource="mappers/mapper-Open.xml"/>
+        <mapper resource="mappers/mapper-Course.xml"/>
     </mappers>
 </configuration>

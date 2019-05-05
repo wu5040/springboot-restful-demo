@@ -8,15 +8,16 @@ import com.example.demo.Status.Exception.UnauthorizedException;
 import com.example.demo.Status.Result;
 import com.example.demo.annotation.CheckToken;
 import com.example.demo.annotation.CurrentUser;
+import com.example.demo.domain.Elective;
 import com.example.demo.domain.Open;
 import com.example.demo.domain.User;
+//import org.apache.el.lang.ELArithmetic;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import sun.nio.cs.US_ASCII;
 
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/student")
 public class StudentController {
-    @Autowired
+
     private static SqlSessionFactory sqlSessionFactory;
 
     static {
@@ -51,7 +52,7 @@ public class StudentController {
     @RequestMapping(method = RequestMethod.GET,value = "/elective")
     public Object getCourseSelected(@CurrentUser User user) throws UnauthorizedException {
         /**
-         *  学生查看本学期已选课程api
+         *  学生查看本学期已选的全部课程api
          */
         if(!"student".equals(user.getRole())){
             throw new UnauthorizedException("role权限错误",Result.StatusCode.Unauthorized.getCode());
@@ -76,8 +77,9 @@ public class StudentController {
             通过课号kh，教师工号gh，学期xq在Open开课表中选择课程
             写入Elective选课表
             检查所选课程是否存在于Open开课表中
-
+            检查是否已选择该课程
          */
+
         if(!"student".equals(user.getRole())){
             throw new UnauthorizedException("role权限错误",Result.StatusCode.Unauthorized.getCode());
         }
@@ -91,7 +93,7 @@ public class StudentController {
 
         if(open==null){ //不存在该课程
             sqlSession.close();
-            throw new NotFoundException("选课失败，该课程不存在。",Result.StatusCode.OPEN_NOT_FOUND.getCode());
+            throw new NotFoundException("选课失败，该课程不存在。",Result.StatusCode.COURSE_NOT_FOUND.getCode());
         }else {         //存在该课程
             if(electiveMapper.getByXhXqKhGh(user.getUserId(),xq,kh,gh)==null){
                 electiveMapper.insert(user.getUserId(), xq, kh, gh);   //在Elective表中插入记录，选课成功
@@ -100,9 +102,42 @@ public class StudentController {
                 return new Result("选课成功", Result.StatusCode.SUCCESS.getCode());
             }else {
                 sqlSession.close();
-                return new Result("该课程已选。",Result.StatusCode.ELECTIVE_ALREADY_EXIST.getCode());
+                return new Result("该课程已选。",Result.StatusCode.COURSE_ALREADY_EXIST.getCode());
             }
         }
 
     }
+
+
+    @CheckToken
+    @RequestMapping(method = RequestMethod.DELETE,value = "elective")
+    public Object delElective(@CurrentUser User user,String kh,String gh,String xq) throws NotFoundException,UnauthorizedException{
+        /**
+         * 学生删除已选课程api
+         * 检查选课表Elective是否存在该课程
+         */
+
+        if(!"student".equals(user.getRole())){
+            throw new UnauthorizedException("role权限错误",Result.StatusCode.Unauthorized.getCode());
+        }
+
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        ElectiveMapper electiveMapper=sqlSession.getMapper(ElectiveMapper.class);
+
+        Elective elective=electiveMapper.getByXhXqKhGh(user.getUserId(),xq,kh,gh);
+
+        if(elective==null){
+            sqlSession.close();
+            throw new NotFoundException("所删除课程不存在。",Result.StatusCode.COURSE_NOT_FOUND.getCode());
+        }
+
+        electiveMapper.delete(user.getUserId(),xq,kh,gh);   //在Elective表中删除记录
+        sqlSession.commit();
+        sqlSession.close();
+        return new Result("删除课程成功。",Result.StatusCode.SUCCESS.getCode());
+
+    }
+
+
+
 }

@@ -10,11 +10,16 @@ public class Course {
     private String yxh;     //院系号
 
 
+    public Course(){
+
+    }
+
     public Course(String kh, String km, int xf, int xs, double cjRatio,String yxh) {
         this.kh = kh;
         this.km = km;
         this.xf = xf;
         this.xs = xs;
+        this.cjRatio=cjRatio;
         this.yxh = yxh;
     }
 

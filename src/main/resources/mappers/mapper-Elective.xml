@@ -18,4 +18,11 @@
         insert into Elective(xh,xq, kh, gh) values(#{xh},#{xq},#{kh},#{gh})
     </insert>
 
+    <delete id="delete" parameterType="string">
+        delete from Elective where xh=#{xh} and xq=#{xq} and kh =#{kh} and gh=#{gh}
+    </delete>
+
+    <update id="update" >
+        update Elective set pscj=#{pscj},kscj=#{kscj},zpcj=#{zpcj} where xh=#{xh} and kh=#{kh} and gh=#{gh} and xq=#{xq}
+    </update>
 </mapper>

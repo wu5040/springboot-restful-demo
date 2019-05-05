@@ -6,9 +6,26 @@
 
     <!--id对应接口中的方法，名字要一样，parameterType是方法的参数类型，
     resultType是查询返回的类型，需要注意的是，这里的SQL语句后面不能加分号，变量不能加引号-->
+
+    <select id="getByGh" parameterType="string" resultType="java.util.Map">
+        select xq,Open.kh,km,sksj from Open,Course where Open.kh=Course.kh and gh=#{gh}
+    </select>
+
     <select id="getByKhGhXq" parameterType="string" resultType="Open">
         select * from Open where kh = #{kh} and gh=#{gh} and xq=#{xq}
     </select>
+
+    <select id="getDetail" parameterType="string" resultType="java.util.Map">
+        SELECT xh,name,pscj,kscj,zpcj
+        FROM Elective,user
+        WHERE kh=#{kh} and xq=#{xq} and gh=#{gh} and xh=userId
+    </select>
+
+
+    <insert id="insert" parameterType="string">
+        insert into Open(xq, kh, gh, sksj) values(#{xq},#{kh},#{gh},#{sksj})
+    </insert>
+
 
 
 </mapper>

@@ -25,7 +25,6 @@ import java.util.List;
 @RequestMapping("/index") //在类上使用RequestMapping，里面设置的value就是方法的父路径
 public class UserController {
 
-    @Autowired
     private static SqlSessionFactory sqlSessionFactory;
 
 
