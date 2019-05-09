@@ -26,6 +26,11 @@
         insert into Open(xq, kh, gh, sksj) values(#{xq},#{kh},#{gh},#{sksj})
     </insert>
 
-
+    <select id="searchByKm" parameterType="string" resultType="java.util.Map">
+        select Open.kh,Course_.km,Open.gh,Open.sksj,Open.xq
+        from Open left join Course_
+        on Open.kh=Course_.kh
+        where Course_.km LIKE #{km}
+    </select>
 
 </mapper>

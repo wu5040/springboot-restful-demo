@@ -64,7 +64,6 @@ public class StudentController {
         return new Result("查询已选课程成功",Result.StatusCode.SUCCESS.getCode(),null,electives);
     }
 
-
     @CheckToken
     @RequestMapping(method = RequestMethod.POST,value = "/elective")
     public Object electiveCourse(@CurrentUser User user, String kh, String gh, String xq) throws NotFoundException,UnauthorizedException {
@@ -150,8 +149,23 @@ public class StudentController {
 
         List<Map> grades = electiveMapper.getGrades(user.getUserId());
 
+        sqlSession.close();
         return new Result("查询成绩成功。", Result.StatusCode.SUCCESS.getCode(),null,grades);
 
     }
 
+    @RequestMapping(method = RequestMethod.GET,value = "/search")
+    public Object searchOpen(String km) throws NotFoundException{
+        /**
+         * 通过课名搜索 开设的课程
+         */
+        SqlSession sqlSession=sqlSessionFactory.openSession();
+        OpenMapper openMapper=sqlSession.getMapper(OpenMapper.class);
+
+        List<Map> openList=openMapper.searchByKm("%"+km+"%");
+        if(openList.isEmpty())
+            throw new NotFoundException("搜索的课程不存在。",Result.StatusCode.COURSE_NOT_FOUND.getCode());
+
+        return new Result("搜索成功。",Result.StatusCode.SUCCESS.getCode(),null,openList);
+    }
 }
