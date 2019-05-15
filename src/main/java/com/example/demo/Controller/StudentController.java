@@ -58,9 +58,9 @@ public class StudentController {
 
         SqlSession sqlSession = sqlSessionFactory.openSession();
         ElectiveMapper electiveMapper=sqlSession.getMapper(ElectiveMapper.class);
-        sqlSession.close();
-        List<Map> electives = electiveMapper.getByXh(user.getUserId());
 
+        List<Map> electives = electiveMapper.getByXh(user.getUserId());
+        sqlSession.close();
         return new Result("查询已选课程成功",Result.StatusCode.SUCCESS.getCode(),null,electives);
     }
 
