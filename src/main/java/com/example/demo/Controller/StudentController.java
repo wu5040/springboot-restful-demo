@@ -1,6 +1,7 @@
 package com.example.demo.Controller;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.demo.Mappers.ElectiveMapper;
 import com.example.demo.Mappers.OpenMapper;
 import com.example.demo.Status.Exception.NotFoundException;
@@ -50,7 +51,7 @@ public class StudentController {
     @RequestMapping(method = RequestMethod.GET,value = "/elective")
     public Object getCourseSelected(@CurrentUser User user) throws UnauthorizedException {
         /**
-         *  学生查看本学期已选的全部课程api
+         *  学生查看本学期已选的全部课程和学分api
          */
         if(!"student".equals(user.getRole())){
             throw new UnauthorizedException("role权限错误",Result.StatusCode.Unauthorized.getCode());
@@ -60,8 +61,13 @@ public class StudentController {
         ElectiveMapper electiveMapper=sqlSession.getMapper(ElectiveMapper.class);
 
         List<Map> electives = electiveMapper.getByXh(user.getUserId());
+        int Credit=electiveMapper.getCreditByXhXq(user.getUserId(),"2018-2019学年 春季学期");
         sqlSession.close();
-        return new Result("查询已选课程成功",Result.StatusCode.SUCCESS.getCode(),null,electives);
+
+        JSONObject jsonObject=new JSONObject();
+        jsonObject.put("Electives",electives);
+        jsonObject.put("Credit",Credit);
+        return new Result("查询已选课程成功",Result.StatusCode.SUCCESS.getCode(),jsonObject,null);
     }
 
     @CheckToken

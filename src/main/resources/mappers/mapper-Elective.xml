@@ -18,6 +18,12 @@
         where EC.gh=U.userId
     </select>
 
+    <select id="getCreditByXhXq" parameterType="string" resultType="integer">
+        select sum(C.xf) as xf
+        from (select xh,kh from Elective where xh=#{xh} ) as E left join (select kh,xf from Course_) as C
+            on E.kh=C.kh
+    </select>
+
     <select id="getByXhXqKhGh" parameterType="string" resultType="Elective">
         select * from Elective where xh = #{xh} and xq = #{xq} and kh=#{kh} and gh=#{gh}
     </select>

@@ -27,10 +27,12 @@
     </insert>
 
     <select id="searchByKm" parameterType="string" resultType="java.util.Map">
-        select Open.kh,Course_.km,Open.gh,Open.sksj,Open.xq
+        select OC.kh,OC.km,OC.gh,U.name as tname,OC.sksj,OC.xq from
+        (select Open.kh,Course_.km,Open.gh,Open.sksj,Open.xq
         from Open left join Course_
         on Open.kh=Course_.kh
-        where Course_.km LIKE #{km}
+        where Course_.km LIKE #{km}) as OC left join (select userId,name from user) as U
+        on OC.gh=U.userId
     </select>
 
 </mapper>
