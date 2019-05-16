@@ -16,5 +16,5 @@ public interface OpenMapper {
     public boolean insert(String xq, String kh, String gh, String sksj);
     public boolean update(String xq, String kh, String gh, String sksj);
 
-    public List<Map> searchByKm(String km);
+    public List<Map> search(String inputStr);
 }
