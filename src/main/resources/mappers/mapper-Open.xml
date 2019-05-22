@@ -15,6 +15,18 @@
         select * from Open where kh = #{kh} and gh=#{gh} and xq=#{xq}
     </select>
 
+    <select id="getAll" resultType="java.util.Map">
+        select OC.kh,OC.km,OC.gh,U.name,OC.sksj,OC.xq,OC.max from
+        (select Open.kh,C.km,Open.gh,Open.sksj,Open.xq,Open.max
+        from Open
+            left join
+        (select kh,km from Course_) as C
+            on Open.kh=C.kh) as OC
+        left join
+        (select userId,name from user) as U
+        on OC.gh=U.userId
+    </select>
+
     <select id="getDetail" parameterType="string" resultType="java.util.Map">
         SELECT xh,name,pscj,kscj,zpcj
         FROM Elective,user
@@ -22,17 +34,30 @@
     </select>
 
 
-    <insert id="insert" parameterType="string">
-        insert into Open(xq, kh, gh, sksj) values(#{xq},#{kh},#{gh},#{sksj})
+    <insert id="insert">
+        insert into Open(xq, kh, gh, sksj, max) values(#{xq},#{kh},#{gh},#{sksj},#{max})
     </insert>
 
+    <update id="update">
+        update Open
+        set sksj=#{sksj},max=#{max}
+        where xq=#{xq} and kh=#{kh} and gh=#{gh}
+    </update>
+
     <select id="search" parameterType="string" resultType="java.util.Map">
-        select OC.kh,OC.km,OC.gh,U.name as tname,OC.sksj,OC.xq from
-        (select Open.kh,Course_.km,Open.gh,Open.sksj,Open.xq
-        from Open left join Course_
-        on Open.kh=Course_.kh
-        where Course_.km LIKE #{inputStr} or Course_.kh LIKE #{inputStr}) as OC left join (select userId,name from user) as U
-        on OC.gh=U.userId
+        select OCU.kh,OCU.km,OCU.gh,tname,OCU.sksj,OCU.xq,OCU.max,count(E.xh) as Cur from
+            (select OC.kh,OC.km,OC.gh,U.name as tname,OC.sksj,OC.xq,OC.max from
+                (select Open.kh,Course_.km,Open.gh,Open.sksj,Open.xq,Open.max
+                from Open left join Course_
+                on Open.kh=Course_.kh
+            where Course_.km LIKE #{inpuStr} or Course_.kh LIKE #{inpuStr}) as OC
+                left join
+            (select userId,name from user) as U
+                on OC.gh=U.userId) as OCU
+        left join
+            (select kh,gh,xq,xh from Elective) as E
+        on OCU.kh=E.kh and OCU.gh=E.gh and OCU.xq=E.xq
+            group by OCU.kh,OCU.gh,OCU.xq
     </select>
 
 </mapper>

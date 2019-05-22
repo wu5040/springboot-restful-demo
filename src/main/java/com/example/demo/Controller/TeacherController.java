@@ -56,40 +56,6 @@ public class TeacherController {
         return new Result("查询开课信息成功",Result.StatusCode.SUCCESS.getCode(),null,openList);
     }
 
-    @CheckToken
-    @RequestMapping(method = RequestMethod.POST,value = "/open")
-    public Object addOpen(@CurrentUser User user,String kh,String xq,String sksj) throws NotFoundException,UnauthorizedException {
-        /**
-         * 教师新增开课信息
-         * 检查课程是否存在于Course表中
-         */
-        if(!"teacher".equals(user.getRole())){
-            throw new UnauthorizedException("role权限错误", Result.StatusCode.Unauthorized.getCode());
-        }
-
-        SqlSession sqlSession=sqlSessionFactory.openSession();
-        CourseMapper courseMapper=sqlSession.getMapper(CourseMapper.class);
-        OpenMapper openMapper=sqlSession.getMapper(OpenMapper.class);
-
-        Course course=courseMapper.getByKh(kh);
-        if(course==null){
-            sqlSession.close();
-            throw new NotFoundException("课程不存在。",Result.StatusCode.COURSE_NOT_FOUND.getCode());
-        }
-
-        Open open=openMapper.getByKhGhXq(kh,user.getUserId(),xq);
-        if(open!=null){
-            sqlSession.close();
-            return new Result("所开课程已存在。",Result.StatusCode.COURSE_ALREADY_EXIST.getCode());
-        }
-
-        openMapper.insert(xq,kh,user.getUserId(),sksj);
-
-        sqlSession.close();
-
-        return new Result("新增开课信息成功",Result.StatusCode.SUCCESS.getCode());
-
-    }
 
     @CheckToken
     @RequestMapping(method = RequestMethod.GET,value = "/open/detail")

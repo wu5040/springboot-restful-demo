@@ -4,8 +4,8 @@ package com.example.demo.domain;
 public class Course {
     private String kh;      //课号
     private String km;      //课名
-    private int xf;         //学分
-    private int xs;         //学时
+    private Integer xf;         //学分
+    private Integer xs;         //学时
     private double cjRatio; //平时成绩占比
     private String yxh;     //院系号
 
@@ -14,7 +14,7 @@ public class Course {
 
     }
 
-    public Course(String kh, String km, int xf, int xs, double cjRatio,String yxh) {
+    public Course(String kh, String km, Integer xf, Integer xs, double cjRatio,String yxh) {
         this.kh = kh;
         this.km = km;
         this.xf = xf;
@@ -47,7 +47,7 @@ public class Course {
         this.km = km;
     }
 
-    public int getXf() {
+    public Integer getXf() {
         return xf;
     }
 
@@ -55,7 +55,7 @@ public class Course {
         this.xf = xf;
     }
 
-    public int getXs() {
+    public Integer getXs() {
         return xs;
     }
 
