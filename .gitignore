@@ -24,6 +24,7 @@ HELP.md
 /nbdist/
 /.nb-gradle/
 /build/
+/src/main/java/com/example/demo/javax.xml.bind.jar
 
 ### VS Code ###
 .vscode/
