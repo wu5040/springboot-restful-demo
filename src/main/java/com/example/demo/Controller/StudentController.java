@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -136,7 +137,7 @@ public class StudentController {
             sqlSession.commit();
             sqlSession.close();
             return new Result("删除课程成功。", Result.StatusCode.SUCCESS.getCode());
-        } catch (Exception e){
+        } catch (Exception e) {
             sqlSession.close();
             e.printStackTrace();
             return new Result("删除课程失败。", Result.StatusCode.FAIL.getCode());
@@ -177,5 +178,53 @@ public class StudentController {
             throw new NotFoundException("搜索的课程不存在。", Result.StatusCode.COURSE_NOT_FOUND.getCode());
 
         return new Result("搜索成功。", Result.StatusCode.SUCCESS.getCode(), null, openList);
+    }
+
+
+    @CheckToken
+    @RequestMapping(method = RequestMethod.GET, value = "/timeList")
+    public Object gettimeList(@CurrentUser User user) throws UnauthorizedException {
+        if (!"student".equals(user.getRole())) {
+            throw new UnauthorizedException("role权限错误", Result.StatusCode.Unauthorized.getCode());
+        }
+
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        ElectiveMapper electiveMapper = sqlSession.getMapper(ElectiveMapper.class);
+
+        List<Map> timeList = electiveMapper.gettimeList(user.getUserId());
+
+        List<Integer> timeL=new ArrayList<>();
+
+        for (int i = 0; i < timeList.size(); i++) {
+            int num;
+            String[] timestr = timeList.get(i).get("sksj").toString().split("-");
+
+            char day = timestr[0].charAt(0);
+            int dd;
+            if (day == '一') {
+                dd = 0;
+            } else if (day == '二') {
+                dd = 1;
+            } else if (day == '三') {
+                dd = 2;
+            } else if (day == '四') {
+                dd = 3;
+            } else {
+                dd = 4;
+            }
+
+
+            String s = timestr[0].substring(1);
+            int ss = Integer.parseInt(s);
+            String e = timestr[1].toString();
+            int ee = Integer.parseInt(e);
+
+            for (int j = ss; j <= ee; j++) {
+                timeL.add(dd*13+j);
+            }
+        }
+
+
+        return new Result("查询课程时间成功。", Result.StatusCode.SUCCESS.getCode(), null, timeL);
     }
 }

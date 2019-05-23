@@ -8,6 +8,7 @@ import java.util.Map;
 
 public interface ElectiveMapper {
     public List<Map> getByXh(String xh);
+    public List<Map> gettimeList(String xh);
     public Elective getByXhXqKhGh(String xh,String xq,String kh,String gh);
     public List<Map> getGrades(String xh);
     public int getCreditByXhXq(String xh,String xq);

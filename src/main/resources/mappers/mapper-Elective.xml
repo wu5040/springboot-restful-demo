@@ -18,6 +18,17 @@
         where EC.gh=U.userId
     </select>
 
+    <select id="gettimeList" parameterType="string" resultType="java.util.Map">
+        select  sksj
+        from (select E.kh,xh,sksj
+                from Elective as E
+                left join
+            (select kh,sksj
+                from Open) as O
+                on E.kh=O.kh ) as EO
+        where EO.xh=#{xh};
+    </select>
+
     <select id="getCreditByXhXq" parameterType="string" resultType="integer">
         select sum(C.xf) as xf
         from (select xh,kh from Elective where xh=#{xh} ) as E left join (select kh,xf from Course_) as C
