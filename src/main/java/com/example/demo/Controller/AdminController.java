@@ -100,7 +100,7 @@ public class AdminController {
 
         List<Map> teaList = teacherMapper.getAll();
         sqlSession.close();
-        return new Result("查询学生成功。", Result.StatusCode.SUCCESS.getCode());
+        return new Result("查询教师成功。", Result.StatusCode.SUCCESS.getCode(),null,teaList);
     }
 
 
