@@ -6,6 +6,13 @@
 
     <!--id对应接口中的方法，名字要一样，parameterType是方法的参数类型，
     resultType是查询返回的类型，需要注意的是，这里的SQL语句后面不能加分号，变量不能加引号-->
+
+    <select id="getAll" resultType="java.util.Map">
+        select sno, name, gender, birthday,jg, sjhm, mc from Student,user,Department
+        where Student.sno=userId and Student.yxh=Department.yxh
+    </select>
+
+
     <select id="getBySno" parameterType="string" resultType="Student">
         select * from Student where sno = #{sno}
     </select>

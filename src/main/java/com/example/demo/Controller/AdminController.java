@@ -2,6 +2,8 @@ package com.example.demo.Controller;
 
 import com.example.demo.Mappers.CourseMapper;
 import com.example.demo.Mappers.OpenMapper;
+import com.example.demo.Mappers.StudentMapper;
+import com.example.demo.Mappers.TeacherMapper;
 import com.example.demo.Status.Exception.NotFoundException;
 import com.example.demo.Status.Exception.UnauthorizedException;
 import com.example.demo.Status.Result;
@@ -15,6 +17,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +32,7 @@ public class AdminController {
 
     @CheckToken
     @RequestMapping(method = RequestMethod.GET, value = "/course")
-    public Object getCourse(@CurrentUser User user) throws UnauthorizedException{
+    public Object getCourse(@CurrentUser User user) throws UnauthorizedException {
         /**
          * 管理员查看所有课程信息
          */
@@ -40,11 +43,11 @@ public class AdminController {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         CourseMapper courseMapper = sqlSession.getMapper(CourseMapper.class);
 
-        List<Map> courseList=courseMapper.getAll();
+        List<Map> courseList = courseMapper.getAll();
 
         sqlSession.close();
 
-        return new Result("查询课程成功。",Result.StatusCode.SUCCESS.getCode(),null,courseList);
+        return new Result("查询课程成功。", Result.StatusCode.SUCCESS.getCode(), null, courseList);
     }
 
     @CheckToken
@@ -66,6 +69,38 @@ public class AdminController {
         sqlSession.close();
 
         return new Result("新增开课信息成功", Result.StatusCode.SUCCESS.getCode(), null, openList);
+    }
+
+
+    @CheckToken
+    @RequestMapping(method = RequestMethod.GET, value = "/student")
+    public Object getStudent(@CurrentUser User user) throws UnauthorizedException {
+        if (!"admin".equals(user.getRole())) {
+            throw new UnauthorizedException("role权限错误", Result.StatusCode.Unauthorized.getCode());
+        }
+
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        StudentMapper studentMapper = sqlSession.getMapper(StudentMapper.class);
+
+        List<Map> stuList = studentMapper.getAll();
+        sqlSession.close();
+        return new Result("查询学生成功。", Result.StatusCode.SUCCESS.getCode(), null, stuList);
+    }
+
+
+    @CheckToken
+    @RequestMapping(method = RequestMethod.GET, value = "/teacher")
+    public Object getTeacher(@CurrentUser User user) throws UnauthorizedException {
+        if (!"admin".equals(user.getRole())) {
+            throw new UnauthorizedException("role权限错误", Result.StatusCode.Unauthorized.getCode());
+        }
+
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        TeacherMapper teacherMapper = sqlSession.getMapper(TeacherMapper.class);
+
+        List<Map> teaList = teacherMapper.getAll();
+        sqlSession.close();
+        return new Result("查询学生成功。", Result.StatusCode.SUCCESS.getCode());
     }
 
 
@@ -98,14 +133,13 @@ public class AdminController {
 
         boolean suc = openMapper.insert(xq, kh, gh, sksj, max);
 
-        if (suc){
+        if (suc) {
             sqlSession.commit();
             sqlSession.close();
             return new Result("新增开课信息成功", Result.StatusCode.SUCCESS.getCode());
-        }
-        else{
+        } else {
             sqlSession.close();
-            return new Result("新增课程失败。",Result.StatusCode.FAIL.getCode());
+            return new Result("新增课程失败。", Result.StatusCode.FAIL.getCode());
         }
     }
 
@@ -124,9 +158,9 @@ public class AdminController {
 
         SqlSession sqlSession = sqlSessionFactory.openSession();
         OpenMapper openMapper = sqlSession.getMapper(OpenMapper.class);
-        boolean suc=openMapper.update(xq, kh, gh, sksj, max);
+        boolean suc = openMapper.update(xq, kh, gh, sksj, max);
 
-        if(suc){
+        if (suc) {
             sqlSession.commit();
             sqlSession.close();
             return new Result("修改开课信息成功。", Result.StatusCode.SUCCESS.getCode());
