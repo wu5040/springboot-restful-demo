@@ -16,11 +16,11 @@
     </select>
 
     <select id="getAll" resultType="java.util.Map">
-        select OC.kh,OC.km,OC.gh,U.name,OC.sksj,OC.xq,OC.max from
-        (select Open.kh,C.km,Open.gh,Open.sksj,Open.xq,Open.max
+        select OC.kh,OC.km,OC.gh,U.name,OC.sksj,OC.xq,OC.xf,OC.xs,OC.max from
+        (select Open.kh,C.km,C.xf,C.xs,Open.gh,Open.sksj,Open.xq,Open.max
         from Open
             left join
-        (select kh,km from Course_) as C
+        (select kh,km,xf,xs from Course_) as C
             on Open.kh=C.kh) as OC
         left join
         (select userId,name from user) as U
@@ -45,8 +45,8 @@
     </update>
 
     <select id="search" parameterType="string" resultType="java.util.Map">
-        select OCU.kh,OCU.km,OCU.gh,tname,OCU.sksj,OCU.xq,OCU.max,count(E.xh) as Cur from
-            (select OC.kh,OC.km,OC.gh,U.name as tname,OC.sksj,OC.xq,OC.max from
+        select OCU.kh,OCU.km,OCU.gh,tname,OCU.sksj,OCU.xq,OCU.xf,OCU.xs,OCU.max,count(E.xh) as Cur from
+            (select OC.kh,OC.km,OC.gh,U.name as tname,OC.sksj,OC.xq,OC.xf,OC.xs,OC.max from
                 (select Open.kh,Course_.km,Open.gh,Open.sksj,Open.xq,Open.max,Course_.xf,Course_.xs
                 from Open left join Course_
                 on Open.kh=Course_.kh

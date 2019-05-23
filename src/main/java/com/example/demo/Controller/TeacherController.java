@@ -36,78 +36,82 @@ public class TeacherController {
 
 
     @CheckToken
-    @RequestMapping(method = RequestMethod.GET,value = "/open")
-    public Object getOpen(@CurrentUser User user) throws UnauthorizedException{
+    @RequestMapping(method = RequestMethod.GET, value = "/open")
+    public Object getOpen(@CurrentUser User user) throws UnauthorizedException {
         /**
          * 教师查看自己的开课信息api
          */
 
-        if(!"teacher".equals(user.getRole())){
+        if (!"teacher".equals(user.getRole())) {
 
             throw new UnauthorizedException("role权限错误", Result.StatusCode.Unauthorized.getCode());
         }
 
-        SqlSession sqlSession=sqlSessionFactory.openSession();
-        OpenMapper openMapper=sqlSession.getMapper(OpenMapper.class);
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        OpenMapper openMapper = sqlSession.getMapper(OpenMapper.class);
 
-        List<Map> openList=openMapper.getByGh(user.getUserId());
+        List<Map> openList = openMapper.getByGh(user.getUserId());
 
         sqlSession.close();
-        return new Result("查询开课信息成功",Result.StatusCode.SUCCESS.getCode(),null,openList);
+        return new Result("查询开课信息成功", Result.StatusCode.SUCCESS.getCode(), null, openList);
     }
 
 
     @CheckToken
-    @RequestMapping(method = RequestMethod.GET,value = "/open/detail")
-    public Object getOpenDetail(@CurrentUser User user,String kh,String xq) throws NotFoundException,UnauthorizedException{
+    @RequestMapping(method = RequestMethod.GET, value = "/open/detail")
+    public Object getOpenDetail(@CurrentUser User user, String kh, String xq) throws NotFoundException, UnauthorizedException {
         /**
          * 教师查看某门课程的详细信息，包括选择这门课的学生及其成绩
          */
-        if(!"teacher".equals(user.getRole())){
+        if (!"teacher".equals(user.getRole())) {
             throw new UnauthorizedException("role权限错误", Result.StatusCode.Unauthorized.getCode());
         }
 
-        SqlSession sqlSession=sqlSessionFactory.openSession();
-        OpenMapper openMapper=sqlSession.getMapper(OpenMapper.class);
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        OpenMapper openMapper = sqlSession.getMapper(OpenMapper.class);
 
-        List<Map> OpenDetail=openMapper.getDetail(kh,user.getUserId(),xq);
+        List<Map> OpenDetail = openMapper.getDetail(kh, user.getUserId(), xq);
         sqlSession.close();
-        if(!OpenDetail.isEmpty()){
-            return new Result("查询课程信息成功。",Result.StatusCode.SUCCESS.getCode(),null,OpenDetail);
-        }else {
-            throw new NotFoundException("查询失败，没有该门课的信息。",Result.StatusCode.COURSE_NOT_FOUND.getCode());
+        if (!OpenDetail.isEmpty()) {
+            return new Result("查询课程信息成功。", Result.StatusCode.SUCCESS.getCode(), null, OpenDetail);
+        } else {
+            throw new NotFoundException("查询失败，没有该门课的信息。", Result.StatusCode.COURSE_NOT_FOUND.getCode());
         }
     }
 
     @CheckToken
-    @RequestMapping(method = RequestMethod.POST,value = "/open/detail")
-    public Object updateScore(@CurrentUser User user,String kh,String xq,String xh,double pscj,double kscj) throws NotFoundException,UnauthorizedException{
+    @RequestMapping(method = RequestMethod.POST, value = "/open/detail")
+    public Object updateScore(@CurrentUser User user, String kh, String xq, String xh, double pscj, double kscj) throws NotFoundException, UnauthorizedException {
         /**
          * 教师修改自己所授课程的学生成绩，只需给出平时成绩和考试成绩，自动根据占比算出总评成绩
          */
-        if(!"teacher".equals(user.getRole())){
+        if (!"teacher".equals(user.getRole())) {
             throw new UnauthorizedException("role权限错误", Result.StatusCode.Unauthorized.getCode());
         }
 
-        SqlSession sqlSession=sqlSessionFactory.openSession();
-        CourseMapper courseMapper=sqlSession.getMapper(CourseMapper.class);
-        ElectiveMapper electiveMapper=sqlSession.getMapper(ElectiveMapper.class);
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        CourseMapper courseMapper = sqlSession.getMapper(CourseMapper.class);
+        ElectiveMapper electiveMapper = sqlSession.getMapper(ElectiveMapper.class);
 
-        Course course=courseMapper.getByKh(kh);
-        if(course==null){
+        Course course = courseMapper.getByKh(kh);
+        if (course == null) {
             sqlSession.close();
-            throw new NotFoundException("课程不存在。",Result.StatusCode.COURSE_NOT_FOUND.getCode());
+            throw new NotFoundException("课程不存在。", Result.StatusCode.COURSE_NOT_FOUND.getCode());
         }
 
-        double cjRatio=course.getCjRatio();
+        double cjRatio = course.getCjRatio();
         System.out.println(cjRatio);
 
-        double zpcj=pscj*cjRatio+kscj*(1-cjRatio);
+        double zpcj = pscj * cjRatio + kscj * (1 - cjRatio);
         System.out.println(zpcj);
 
-        electiveMapper.update(xh,xq,kh,user.getUserId(),pscj,kscj,zpcj);
+        boolean suc = electiveMapper.update(xh, xq, kh, user.getUserId(), pscj, kscj, zpcj);
         sqlSession.commit();
         sqlSession.close();
-        return new Result("修改成功。",Result.StatusCode.SUCCESS.getCode());
+        if (suc) {
+            return new Result("修改成功。", Result.StatusCode.SUCCESS.getCode());
+        } else {
+            return new Result("修改失败。", Result.StatusCode.FAIL.getCode());
+        }
     }
 }

@@ -29,10 +29,10 @@
     </select>
 
     <select id="getGrades" parameterType="string" resultType="java.util.Map">
-        select EC.kh,C.km,EC.gh,EC.xq,EC.pscj,EC.kscj,EC.zpcj from
-         (select E.kh,E.gh,E.xq,E.pscj,E.kscj,E.zpcj
-            from Elective as E
-            where xh = #{xh}
+        select EC.kh,C.km,EC.gh,EC.name, EC.xq,EC.pscj,EC.kscj,EC.zpcj from
+         (select E.kh,E.gh,U.name,E.xq,E.pscj,E.kscj,E.zpcj
+            from Elective as E,user as U
+            where xh = #{xh} and E.gh=U.userId
             ) as EC left join (select kh,km from Course_) as C
         on EC.kh=C.kh
     </select>
