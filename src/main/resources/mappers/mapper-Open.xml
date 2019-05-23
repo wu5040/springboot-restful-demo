@@ -47,7 +47,7 @@
     <select id="search" parameterType="string" resultType="java.util.Map">
         select OCU.kh,OCU.km,OCU.gh,tname,OCU.sksj,OCU.xq,OCU.max,count(E.xh) as Cur from
             (select OC.kh,OC.km,OC.gh,U.name as tname,OC.sksj,OC.xq,OC.max from
-                (select Open.kh,Course_.km,Open.gh,Open.sksj,Open.xq,Open.max
+                (select Open.kh,Course_.km,Open.gh,Open.sksj,Open.xq,Open.max,Course_.xf,Course_.xs
                 from Open left join Course_
                 on Open.kh=Course_.kh
             where Course_.km LIKE #{inpuStr} or Course_.kh LIKE #{inpuStr}) as OC

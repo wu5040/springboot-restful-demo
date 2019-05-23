@@ -29,6 +29,26 @@ public class AdminController {
     }
 
     @CheckToken
+    @RequestMapping(method = RequestMethod.GET, value = "/course")
+    public Object getCourse(@CurrentUser User user) throws UnauthorizedException{
+        /**
+         * 管理员查看所有开课信息
+         */
+        if (!"admin".equals(user.getRole())) {
+            throw new UnauthorizedException("role权限错误", Result.StatusCode.Unauthorized.getCode());
+        }
+
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        CourseMapper courseMapper = sqlSession.getMapper(CourseMapper.class);
+
+        List<Map> courseList=courseMapper.getAll();
+
+        sqlSession.close();
+
+        return new Result("查询课程成功。",Result.StatusCode.SUCCESS.getCode(),null,courseList);
+    }
+
+    @CheckToken
     @RequestMapping(method = RequestMethod.GET, value = "/open")
     public Object getOpen(@CurrentUser User user) throws UnauthorizedException {
         /**

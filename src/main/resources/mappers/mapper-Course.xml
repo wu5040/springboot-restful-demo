@@ -11,6 +11,10 @@
         select * from Course_ where kh=#{kh}
     </select>
 
+    <select id="getAll" resultType="java.util.Map">
+        select kh, km, xf, xs, cjRatio, mc from Course_,Department where Course_.yxh=Department.yxh
+    </select>
+
 
 
 
