@@ -7,13 +7,13 @@
     <!--id对应接口中的方法，名字要一样，parameterType是方法的参数类型，
     resultType是查询返回的类型，需要注意的是，这里的SQL语句后面不能加分号，变量不能加引号-->
     <select id="getByXh" parameterType="string" resultType="java.util.Map">
-        select EC.kh,C.km,EC.gh,name as tname,EC.xq,EC.sksj
+        select EC.kh,C.km,EC.gh,name as tname,EC.xq,C.xf,C.xs,EC.sksj
         from (( select E.kh,E.gh,E.xq,O.sksj
                 from Elective as E
                     left join (select kh,gh,sksj from Open)as O
                     on E.kh= O.kh and E.gh=O.gh
                 where xh = #{xh}) as EC
-                    left join (select kh,km from Course_) as C
+                    left join (select kh,km,xf,xs from Course_) as C
                     on EC.kh=C.kh),(select userId,name from user) as U
         where EC.gh=U.userId
     </select>
