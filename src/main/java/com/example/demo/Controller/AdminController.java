@@ -15,7 +15,6 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +31,7 @@ public class AdminController {
     @RequestMapping(method = RequestMethod.GET, value = "/course")
     public Object getCourse(@CurrentUser User user) throws UnauthorizedException{
         /**
-         * 管理员查看所有开课信息
+         * 管理员查看所有课程信息
          */
         if (!"admin".equals(user.getRole())) {
             throw new UnauthorizedException("role权限错误", Result.StatusCode.Unauthorized.getCode());

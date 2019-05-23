@@ -131,10 +131,16 @@ public class StudentController {
             throw new NotFoundException("所删除课程不存在。", Result.StatusCode.COURSE_NOT_FOUND.getCode());
         }
 
-        electiveMapper.delete(user.getUserId(), xq, kh, gh);   //在Elective表中删除记录
-        sqlSession.commit();
-        sqlSession.close();
-        return new Result("删除课程成功。", Result.StatusCode.SUCCESS.getCode());
+        boolean suc = electiveMapper.delete(user.getUserId(), xq, kh, gh);   //在Elective表中删除记录
+
+        if (suc) {
+            sqlSession.commit();
+            sqlSession.close();
+            return new Result("删除课程成功。", Result.StatusCode.SUCCESS.getCode());
+        } else {
+            sqlSession.close();
+            return new Result("删除课程失败。", Result.StatusCode.FAIL.getCode());
+        }
 
     }
 
