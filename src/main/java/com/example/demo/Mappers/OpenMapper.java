@@ -10,6 +10,7 @@ public interface OpenMapper {
     public List<Map> getByGh(String gh);
     public Open getByKhGhXq(String kh,String gh,String xq);
     public List<Map> getAll();
+    public List<Map> getelenum();
     /**
      * 查询选了某一课程的所有学生及他们的成绩信息
      */

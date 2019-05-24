@@ -1,5 +1,6 @@
 package com.example.demo.Controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.demo.Mappers.CourseMapper;
 import com.example.demo.Mappers.OpenMapper;
 import com.example.demo.Mappers.StudentMapper;
@@ -92,6 +93,10 @@ public class AdminController {
         OpenMapper openMapper = sqlSession.getMapper(OpenMapper.class);
 
         List<Map> openList = openMapper.getAll();
+//        List<Map> elecnum =openMapper.getelenum();
+//
+//        JSONObject jsonObject = new JSONObject();
+//        jsonObject.put("elenum", elecnum);
 
         sqlSession.close();
 
