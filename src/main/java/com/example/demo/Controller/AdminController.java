@@ -50,6 +50,33 @@ public class AdminController {
         return new Result("查询课程成功。", Result.StatusCode.SUCCESS.getCode(), null, courseList);
     }
 
+
+    @CheckToken
+    @RequestMapping(method = RequestMethod.POST, value = "/course")
+    public Object addCourse(@CurrentUser User user, String kh, String km, Integer xf, Integer xs, double cjRatio, String yxh) throws UnauthorizedException {
+        if (!"admin".equals(user.getRole())) {
+            throw new UnauthorizedException("role权限错误", Result.StatusCode.Unauthorized.getCode());
+        }
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        CourseMapper courseMapper = sqlSession.getMapper(CourseMapper.class);
+
+        Course course=courseMapper.getByKh(kh);
+        if(course!=null){
+            return new Result("课号已存在。",Result.StatusCode.FAIL.getCode());
+        }
+
+        boolean suc = courseMapper.insert(kh, km, xf, xs, cjRatio, yxh);
+        if (suc) {
+            sqlSession.commit();
+            sqlSession.close();
+            return new Result("新增课程成功。", Result.StatusCode.SUCCESS.getCode());
+        } else {
+            sqlSession.close();
+            return new Result("新增课程失败。", Result.StatusCode.FAIL.getCode());
+        }
+    }
+
+
     @CheckToken
     @RequestMapping(method = RequestMethod.GET, value = "/open")
     public Object getOpen(@CurrentUser User user) throws UnauthorizedException {
@@ -100,7 +127,7 @@ public class AdminController {
 
         List<Map> teaList = teacherMapper.getAll();
         sqlSession.close();
-        return new Result("查询教师成功。", Result.StatusCode.SUCCESS.getCode(),null,teaList);
+        return new Result("查询教师成功。", Result.StatusCode.SUCCESS.getCode(), null, teaList);
     }
 
 

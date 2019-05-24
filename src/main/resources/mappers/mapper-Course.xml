@@ -15,6 +15,11 @@
         select kh, km, xf, xs, cjRatio, mc from Course_,Department where Course_.yxh=Department.yxh
     </select>
 
+    <insert id="insert">
+        insert into Course_
+        values (#{kh},#{km},#{xf},#{xs},#{cjRatio},#{yxh})
+    </insert>
+
 
 
 
